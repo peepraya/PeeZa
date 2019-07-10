@@ -78,8 +78,8 @@ class _AuthenState extends State<Authen> {
         
         // Create Route เคลื่อนย้ายการทำงาน
         var registerRoute = 
-        //context เชื่อมต่อ Object
-        // ไปหน้าที่ต้องการ Register() = register.dart
+        // context เชื่อมต่อ Object
+        // ไปหน้า Register() = register.dart
         MaterialPageRoute(builder: (BuildContext context) => Register());
         Navigator.of(context).push(registerRoute);
 

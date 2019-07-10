@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
         // กำหนด App ให้เป็นแนวนอน
         // [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-    return MaterialApp(
+    return MaterialApp(debugShowCheckedModeBanner: false, //ปิด Dubug
       home: Authen(),
     );
   }
