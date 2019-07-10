@@ -8,13 +8,23 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   // Explict
+  final formKey = GlobalKey<FormState>(); // สามารถเก็บข้อมูลได้หลายประเภท
+  String nameString, emailString, passwordString;
 
   // Method
   Widget uploadButton() {
     return IconButton(
-      icon: Icon(Icons.cloud_upload),
-      onPressed: () {},
-    ); //ดึงมาจาก Material.IO
+      icon: Icon(Icons.cloud_upload), //ดึงมาจาก Material.IO ของ Google
+      onPressed: () {
+        print('Click Upload');
+        if (formKey.currentState.validate()) {
+          // ตรวจสอบว่าข้อมูลถูกต้องหรือไม่
+          formKey.currentState.save(); // บันทึก
+          print( //นำค่าที่กรอกมาแสดงผ่านตัวแปรที่บรรทัด 12
+              'Name = $nameString , Email = $emailString , Password = $passwordString');
+        }
+      },
+    );
   }
 
   Widget nameText() {
@@ -37,6 +47,15 @@ class _RegisterState extends State<Register> {
           color: Colors.blue, //กำหนดสีของ Icon
         ),
       ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          //ตรวจสอบว่ามีข้อมูลหรือไม่
+          return 'Please Fill in the Blank'; // ถ้าไม่มัให้ขึ้นข้อความนี้
+        }
+      },
+      onSaved: (String value) {
+        nameString = value; //นำค่า value = ค่าที่กำหนด
+      },
     );
   }
 
@@ -61,6 +80,14 @@ class _RegisterState extends State<Register> {
           color: Colors.green, //กำหนดสีของ Icon
         ),
       ),
+      validator: (String value) {
+        if (!((value.contains('@')) && (value.contains('.')))) {
+          return 'Email Format Fail';
+        }
+      },
+      onSaved: (String value) {
+        emailString = value;
+      },
     );
   }
 
@@ -71,7 +98,7 @@ class _RegisterState extends State<Register> {
         labelStyle: TextStyle(
             color: Colors.purple, //กำหนดสีแของ label
             fontSize: 30.0, //กำหนดขนาดของ label
-            fontWeight: FontWeight.bold ,
+            fontWeight: FontWeight.bold,
             fontFamily: 'OpenSans'),
         helperText: 'More 6 Charactor', //สำหรับทำหมายเหตุตอนกรอก
         helperStyle: TextStyle(
@@ -84,6 +111,14 @@ class _RegisterState extends State<Register> {
           color: Colors.purple, //กำหนดสีของ Icon
         ),
       ),
+      validator: (String value) {
+        if (value.length <= 5) {
+          return 'Password Fail';
+        }
+      },
+      onSaved: (String value) {
+        passwordString = value;
+      },
     );
   }
 
@@ -103,11 +138,16 @@ class _RegisterState extends State<Register> {
         child: Container(
           //กำหนดความกว้าง
           width: 250.0,
-          child: Column(
-            children: <Widget>[ //เรียกใช้ Widget
-              nameText(), 
-              emailText(), 
-              passwordText()],
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: <Widget>[
+                //เรียกใช้ Widget
+                nameText(),
+                emailText(),
+                passwordText()
+              ],
+            ),
           ),
         ),
       ),
