@@ -58,6 +58,50 @@ class _AuthenState extends State<Authen> {
     );
   }
 
+  Widget signInButton() {
+    return RaisedButton(
+      color: Colors.orange[800], //สีพื้นหลังปุ่ม
+      child: Text(
+        'Sign In',
+        style: TextStyle(color: Colors.white),
+      ), //สีตัวหนังสือในปุ่ม
+      onPressed: () {}, //ทำให้ปุ่มกดได้
+    );
+  }
+
+  Widget signUpButton() {
+    return RaisedButton(
+      color: Colors.orange[200],
+      child: Text('Sign Up'),
+      onPressed: () {},
+    );
+  }
+
+  Widget showButton() {
+    return Container(
+      width: 250.0,
+      //เรียงจากซ้ายไปขวา
+      child: Row(
+        children: <Widget>[
+          //แบ่งขนาดให้เท่ากัน
+          Expanded(
+            child: signInButton(),
+          ),
+          mySizeBox(),
+          Expanded(
+            child: signUpButton(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget mySizeBox() {
+    return SizedBox(
+      width: 8.0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //Tool สำหรับการออกแบบ
@@ -65,6 +109,13 @@ class _AuthenState extends State<Authen> {
       resizeToAvoidBottomPadding: false, //อนุญาติให้คีย์บอร์ดทับ Widget
       // Container กำหนดตำแหน่งและขนาด
       body: Container(
+        decoration: BoxDecoration(
+          // กำหนดพื้นหลังไล่เฉดสี
+          gradient: RadialGradient(
+              colors: [Colors.white, Colors.orange[600]], 
+              radius: 1.0 , // กำหนดรัศมีตรงกลาง
+              center: Alignment.center,),
+        ),
         padding: EdgeInsets.only(top: 60.0), //กำหนดความห่างจาก Method
         alignment: Alignment.topCenter,
         child: Column(
@@ -72,7 +123,8 @@ class _AuthenState extends State<Authen> {
             showLogo(),
             showText(),
             emailText(),
-            passwordText()
+            passwordText(),
+            showButton(),
           ],
         ), //child,children คำสั่งเรียกใช้ Method
       ),
