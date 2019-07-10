@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "514853641715",
+    "firebase_url": "https://peetpa-flutter.firebaseio.com",
+    "project_id": "peetpa-flutter",
+    "storage_bucket": "peetpa-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514853641715:android:7c8744901492eb36",
+        "android_client_info": {
+          "package_name": "th.or.tpa.pee_tpa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514853641715-if76ccsm58q3445nehso0pqvp6rb9f7k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm0LTNfNb_JRYA_KP4CzQYnISa21aEMOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514853641715-if76ccsm58q3445nehso0pqvp6rb9f7k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
