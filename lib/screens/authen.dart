@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pee_tpa/screens/register.dart';
 
 class Authen extends StatefulWidget {
   @override
@@ -73,7 +74,16 @@ class _AuthenState extends State<Authen> {
     return RaisedButton(
       color: Colors.orange[200],
       child: Text('Sign Up'),
-      onPressed: () {},
+      onPressed: () {print('You Click Sign up'); //แสดงข้อความหลังจากกดปุ่ม
+        
+        // Create Route เคลื่อนย้ายการทำงาน
+        var registerRoute = 
+        //context เชื่อมต่อ Object
+        // ไปหน้าที่ต้องการ Register() = register.dart
+        MaterialPageRoute(builder: (BuildContext context) => Register());
+        Navigator.of(context).push(registerRoute);
+
+      },
     );
   }
 
