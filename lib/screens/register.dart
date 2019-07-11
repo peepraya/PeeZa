@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // เอา Firebase มาใช้
 
 class Register extends StatefulWidget {
   //ถ่ายเทข้อมูล
@@ -9,7 +11,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   // Explict
   final formKey = GlobalKey<FormState>(); // สามารถเก็บข้อมูลได้หลายประเภท
-  String nameString, emailString, passwordString;
+  String nameString, emailString, passwordString; // ประกาศตัวแปร
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance; // Call Library มาทำงาน
 
   // Method
   Widget uploadButton() {
@@ -20,9 +23,46 @@ class _RegisterState extends State<Register> {
         if (formKey.currentState.validate()) {
           // ตรวจสอบว่าข้อมูลถูกต้องหรือไม่
           formKey.currentState.save(); // บันทึก
-          print( //นำค่าที่กรอกมาแสดงผ่านตัวแปรที่บรรทัด 12
+          print(//นำค่าที่กรอกมาแสดงผ่านตัวแปรที่บรรทัด 12
               'Name = $nameString , Email = $emailString , Password = $passwordString');
+          registerFirebase();
         }
+      },
+    );
+  }
+
+  Future<void> registerFirebase() async {
+    await firebaseAuth
+        .createUserWithEmailAndPassword(
+            email: emailString, password: passwordString)
+        .then((response) {
+      print('Regsiter Success');
+    }).catchError((response) {
+      // ตรวจสอบค่าซ้ำ
+      print('Error = ${response.toString()}');
+
+      String title = response.code;
+      String message = response.message;
+      myAlert(title, message);
+    });
+  }
+
+  void myAlert(String titleString, String messageString) { // Alert ในกรณีที่ catchError ในบรรทัด 40
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titleString,style: TextStyle(color: Colors.red),),
+          content: Text(messageString),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
       },
     );
   }
