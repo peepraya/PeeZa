@@ -10,17 +10,49 @@ class MyService extends StatefulWidget {
 class _MyServiceState extends State<MyService> {
   // Explicit
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
+  String nameString = '';
 
   // Method
+  Widget showTitleAppBar() {
+    return Container(
+      alignment: Alignment.topLeft,
+      child: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text('My Service'),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Login by $nameString',
+              style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-Future<void> signOutExit()async{
-  await firebaseAuth.signOut().then((response){
-    exit(0); //ปิด App
-  });
+  @override
+  void initState() {
+    super.initState();
+    findName();
+  }
 
+  Future<void> findName() async {
+    FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    setState(() {
+      nameString = firebaseUser.displayName;
+    });
+    print('name = $nameString');
+  }
 
-}
+  Future<void> signOutExit() async {
+    await firebaseAuth.signOut().then((response) {
+      exit(0); //ปิด App
+    });
+  }
 
   Widget showAppName() {
     return Text(
@@ -72,7 +104,8 @@ Future<void> signOutExit()async{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Service'),
+        title: showTitleAppBar(),
+        backgroundColor: Colors.orange[900],
       ),
       body: Text('Body'),
       drawer: myDrawerMenu(),

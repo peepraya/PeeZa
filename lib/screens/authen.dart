@@ -13,8 +13,23 @@ class _AuthenState extends State<Authen> {
   // Explicit ประกาศ Varible
   final formkey = GlobalKey<FormState>();
   String emailString, passwordString;
+  final scaffoldkey = GlobalKey<ScaffoldState>();
 
   // Method การเอา Statement มารวมกัน
+
+  void mySnackBar(String messageString) {
+    SnackBar snackBar = SnackBar(
+      content: Text(messageString),
+      duration: Duration(seconds: 8), //ตั้งเวลาให้หายเอง
+      backgroundColor: Colors.orange[600], //ตั้ง backgroundColor ให้ Snackbar
+      action: SnackBarAction(
+        label: 'Close',
+        onPressed: () {},
+      ),
+    );
+    scaffoldkey.currentState.showSnackBar(snackBar);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -119,13 +134,16 @@ class _AuthenState extends State<Authen> {
   Future<void> checkAuthen() async {
     print('email = $emailString,password = $passwordString');
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    await firebaseAuth.signInWithEmailAndPassword(
-        email: emailString, password: passwordString).then((response){
-          moveToService();
-        }).catchError((response){
-          String messageString = response.message;
-          print('message = $messageString');
-        });
+    await firebaseAuth
+        .signInWithEmailAndPassword(
+            email: emailString, password: passwordString)
+        .then((response) {
+      moveToService();
+    }).catchError((response) {
+      String messageString = response.message;
+      print('message = $messageString');
+      mySnackBar(messageString);
+    });
   }
 
   Widget signUpButton() {
@@ -174,6 +192,7 @@ class _AuthenState extends State<Authen> {
   Widget build(BuildContext context) {
     //Tool สำหรับการออกแบบ
     return Scaffold(
+      key: scaffoldkey,
       resizeToAvoidBottomPadding: false, //อนุญาติให้คีย์บอร์ดทับ Widget
       // Container กำหนดตำแหน่งและขนาด
       body: Container(
