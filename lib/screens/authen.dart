@@ -11,16 +11,17 @@ class Authen extends StatefulWidget {
 //ออกแบบหน้าจอ
 class _AuthenState extends State<Authen> {
   // Explicit ประกาศ Varible
+  final formkey = GlobalKey<FormState>();
+  String emailString, passwordString;
 
   // Method การเอา Statement มารวมกัน
   @override
-  void initState(){
+  void initState() {
     super.initState();
     checkStatus();
   }
 
-  Future<void> checkStatus()async{
-    
+  Future<void> checkStatus() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser != null) {
@@ -28,11 +29,11 @@ class _AuthenState extends State<Authen> {
     }
   }
 
-  void moveToService(){
-
-    var serviceRoute = MaterialPageRoute(builder: (BuildContext context) => MyService());
-    Navigator.of(context).pushAndRemoveUntil(serviceRoute, (Route<dynamic> route)=> false);
-
+  void moveToService() {
+    var serviceRoute =
+        MaterialPageRoute(builder: (BuildContext context) => MyService());
+    Navigator.of(context)
+        .pushAndRemoveUntil(serviceRoute, (Route<dynamic> route) => false);
   }
 
   Widget showLogo() {
@@ -66,6 +67,14 @@ class _AuthenState extends State<Authen> {
         //สำหรับให้กรอก
         decoration:
             InputDecoration(labelText: 'Email :', hintText: 'you@email.com'),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Please Fill Email';
+          }
+        },
+        onSaved: (String value) {
+          emailString = value;
+        },
       ),
     );
   }
@@ -79,6 +88,14 @@ class _AuthenState extends State<Authen> {
           labelText: 'Password :',
           hintText: 'More 6 Charactor',
         ),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Please Fill Password';
+          }
+        },
+        onSaved: (String value) {
+          passwordString = value;
+        },
       ),
     );
   }
@@ -90,23 +107,40 @@ class _AuthenState extends State<Authen> {
         'Sign In',
         style: TextStyle(color: Colors.white),
       ), //สีตัวหนังสือในปุ่ม
-      onPressed: () {}, //ทำให้ปุ่มกดได้
+      onPressed: () {
+        if (formkey.currentState.validate()) {
+          formkey.currentState.save();
+          checkAuthen();
+        }
+      }, //ทำให้ปุ่มกดได้
     );
+  }
+
+  Future<void> checkAuthen() async {
+    print('email = $emailString,password = $passwordString');
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth.signInWithEmailAndPassword(
+        email: emailString, password: passwordString).then((response){
+          moveToService();
+        }).catchError((response){
+          String messageString = response.message;
+          print('message = $messageString');
+        });
   }
 
   Widget signUpButton() {
     return RaisedButton(
       color: Colors.orange[200],
       child: Text('Sign Up'),
-      onPressed: () {print('You Click Sign up'); //แสดงข้อความหลังจากกดปุ่ม
-        
-        // Create Route เคลื่อนย้ายการทำงาน
-        var registerRoute = 
-        // context เชื่อมต่อ Object
-        // ไปหน้า Register() = register.dart
-        MaterialPageRoute(builder: (BuildContext context) => Register());
-        Navigator.of(context).push(registerRoute);
+      onPressed: () {
+        print('You Click Sign up'); //แสดงข้อความหลังจากกดปุ่ม
 
+        // Create Route เคลื่อนย้ายการทำงาน
+        var registerRoute =
+            // context เชื่อมต่อ Object
+            // ไปหน้า Register() = register.dart
+            MaterialPageRoute(builder: (BuildContext context) => Register());
+        Navigator.of(context).push(registerRoute);
       },
     );
   }
@@ -146,20 +180,24 @@ class _AuthenState extends State<Authen> {
         decoration: BoxDecoration(
           // กำหนดพื้นหลังไล่เฉดสี
           gradient: RadialGradient(
-              colors: [Colors.white, Colors.orange[600]], 
-              radius: 1.0 , // กำหนดรัศมีตรงกลาง
-              center: Alignment.center,),
+            colors: [Colors.white, Colors.orange[600]],
+            radius: 1.0, // กำหนดรัศมีตรงกลาง
+            center: Alignment.center,
+          ),
         ),
         padding: EdgeInsets.only(top: 60.0), //กำหนดความห่างจาก Method
         alignment: Alignment.topCenter,
-        child: Column(
-          children: <Widget>[
-            showLogo(),
-            showText(),
-            emailText(),
-            passwordText(),
-            showButton(),
-          ],
+        child: Form(
+          key: formkey,
+          child: Column(
+            children: <Widget>[
+              showLogo(),
+              showText(),
+              emailText(),
+              passwordText(),
+              showButton(),
+            ],
+          ),
         ), //child,children คำสั่งเรียกใช้ Method
       ),
     );
