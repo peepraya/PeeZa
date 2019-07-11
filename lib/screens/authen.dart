@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pee_tpa/screens/my_service.dart';
 import 'package:pee_tpa/screens/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Authen extends StatefulWidget {
   @override
@@ -11,6 +13,28 @@ class _AuthenState extends State<Authen> {
   // Explicit ประกาศ Varible
 
   // Method การเอา Statement มารวมกัน
+  @override
+  void initState(){
+    super.initState();
+    checkStatus();
+  }
+
+  Future<void> checkStatus()async{
+    
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    if (firebaseUser != null) {
+      moveToService();
+    }
+  }
+
+  void moveToService(){
+
+    var serviceRoute = MaterialPageRoute(builder: (BuildContext context) => MyService());
+    Navigator.of(context).pushAndRemoveUntil(serviceRoute, (Route<dynamic> route)=> false);
+
+  }
+
   Widget showLogo() {
     // ดึงรูปภาพ
     return Container(

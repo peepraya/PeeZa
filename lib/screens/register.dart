@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // เอา Firebase มาใช้
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pee_tpa/screens/my_service.dart'; // เอา Firebase มาใช้
 
 class Register extends StatefulWidget {
   //ถ่ายเทข้อมูล
@@ -37,6 +38,7 @@ class _RegisterState extends State<Register> {
             email: emailString, password: passwordString)
         .then((response) {
       print('Regsiter Success');
+      setupDisplayName();
     }).catchError((response) {
       // ตรวจสอบค่าซ้ำ
       print('Error = ${response.toString()}');
@@ -47,12 +49,32 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  void myAlert(String titleString, String messageString) { // Alert ในกรณีที่ catchError ในบรรทัด 40
+  Future<void> setupDisplayName() async {
+    // ตรวจสอบการใช้
+    await firebaseAuth.currentUser().then((response) {
+      UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = nameString;
+      response.updateProfile(userUpdateInfo);
+
+      // Move To Service
+      var myServiceRoute =
+          MaterialPageRoute(builder: (BuildContext context) => MyService());
+
+      //ไม่มีการย้อนกลับตรง AppBar
+      Navigator.of(context).pushAndRemoveUntil(myServiceRoute, (Route<dynamic> route) => false);
+    });
+  }
+
+  void myAlert(String titleString, String messageString) {
+    // Alert ในกรณีที่ catchError ในบรรทัด 42
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(titleString,style: TextStyle(color: Colors.red),),
+          title: Text(
+            titleString,
+            style: TextStyle(color: Colors.red),
+          ),
           content: Text(messageString),
           actions: <Widget>[
             FlatButton(
