@@ -61,5 +61,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.android.support:multidex:1.0.3' //Cloud Firebase
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 apply plugin: 'com.google.gms.google-services' //Firebase
+apply plugin: 'kotlin-android'
