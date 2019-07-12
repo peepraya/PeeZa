@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pee_tpa/models/pee_video_model.dart';
+import 'package:pee_tpa/screens/play_video.dart';
 
 class ShowListVideo extends StatefulWidget {
   @override
@@ -78,7 +79,8 @@ class _ShowListVideoState extends State<ShowListVideo> {
     );
   }
 
-  Widget myDivider() { //ใส่เส้นระหว่าง Row
+  Widget myDivider() {
+    //ใส่เส้นระหว่าง Row
     return Divider(
       height: 5.0,
       color: Colors.grey[600],
@@ -93,14 +95,25 @@ class _ShowListVideoState extends State<ShowListVideo> {
       child: ListView.builder(
         itemCount: peeVideoModels.length,
         itemBuilder: (context, int index) {
-          return Container(
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[showImage(index), showText(index)],
-                ),myDivider()
-              ],
+          return GestureDetector(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[showImage(index), showText(index)],
+                  ),
+                  myDivider()
+                ],
+              ),
             ),
+            onTap: () {
+              
+              print('index = $index');
+
+
+              var playRoute = MaterialPageRoute(builder: (BuildContext context) => PlayVideo(peeVideoModel: peeVideoModels[index],));
+              Navigator.of(context).push(playRoute);
+            },
           );
         },
       ),
