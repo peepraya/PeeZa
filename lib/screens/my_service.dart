@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pee_tpa/screens/show_list-video.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 
 class MyService extends StatefulWidget {
   @override
@@ -55,6 +56,22 @@ class _MyServiceState extends State<MyService> {
     });
   }
 
+  Future<void> readQRCode()async{
+
+    try {
+      String qrCodeString = await BarcodeScanner.scan();
+
+      if (qrCodeString.length != 0) {
+        print('QR Code ==> $qrCodeString');
+      }
+
+    } catch (e) {
+    }
+    
+    
+  }
+
+
   Widget showAppName() {
     return Text(
       'PeeZa',
@@ -93,6 +110,7 @@ class _MyServiceState extends State<MyService> {
               style: TextStyle(fontSize: 18.0),
             ),onTap: (){
               print('Click QR Code');
+              readQRCode();
             },
           ),
           ListTile(
